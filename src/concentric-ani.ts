@@ -1,7 +1,6 @@
 import { AniBase } from './abstractions/ani-base';
 import paper from 'paper';
 import { AniHelpers } from './helpers/ani-helpers';
-import { Layer } from 'paper/dist/paper-core';
 
 export class ConcentricAni extends AniBase {
   private readonly _circles: paper.Path.Circle[] = [];
@@ -29,7 +28,6 @@ export class ConcentricAni extends AniBase {
       currentRadius -= maxRadius / 4;
     }
 
-    this._project.view.viewSize = new paper.Size(this.Width, this.Height);
   }
 
   protected StartAni(): void {
@@ -41,9 +39,6 @@ export class ConcentricAni extends AniBase {
     let direction: 'up' | 'down' = 'up';
 
     const interval: number = window.setInterval(() => {
-
-      console.log(`Animating: ${index} | ${direction} | ${this._circles[index].strokeWidth}`);
-
       if (direction === 'up') {
         this._circles[index].strokeWidth += 0.5;
         if (this._circles[index].strokeWidth === 4) {

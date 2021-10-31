@@ -26,6 +26,7 @@ export abstract class AniBase {
   private InitializeCanvas(): void {
     this._canvas.width = this._element.clientWidth;
     this._canvas.height = this._element.clientHeight;
+    this._project.view.viewSize = new paper.Size(this.Width, this.Height);
   }
 
   protected abstract StartAni(): void;
