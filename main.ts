@@ -1,5 +1,6 @@
 import { ConcentricAni } from "./src/concentric-ani";
+import { SpinningArcsAnni } from "./src/spinning-arcs";
 
-const element: HTMLElement = <HTMLElement>document.getElementById("concentricCircles");
+const concentricAni = new ConcentricAni(<HTMLElement>document.getElementById("concentricCircles"));
 
-const concentricAni = new ConcentricAni(element);
+const spinningArcs = new SpinningArcsAnni(<HTMLElement>document.getElementById("spinningArcs"));
