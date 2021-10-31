@@ -4,7 +4,7 @@ import { AniHelpers } from './helpers/ani-helpers';
 import { Layer } from 'paper/dist/paper-core';
 
 export class ConcentricAni extends AniBase {
-  private readonly Circles: paper.Path.Circle[] = [];
+  private readonly _circles: paper.Path.Circle[] = [];
 
   constructor(element: HTMLElement) {
     super(element);
@@ -12,35 +12,50 @@ export class ConcentricAni extends AniBase {
   }
 
   private CreateElements(): void {
-    const maxRadius: number = this.Height >= this.Width ? (this.Height - 2) / 2 : (this.Width - 2) / 2;
+    const maxRadius: number = this.Height >= this.Width ? (this.Height - 10) / 2 : (this.Width - 10) / 2;
 
     let currentRadius: number = maxRadius;
+    const strokeColor: paper.Color = new paper.Color('black');
 
-    for (let i: number = 0; i < 3; i++) {
+    for (let i: number = 0; i < 4; i++) {
       const center: [x: number, y: number] = AniHelpers.GetCenterFromElement(this._element);
       const point: paper.Point = new paper.Point(center[0], center[1]);
       const circle: paper.Path.Circle = new paper.Path.Circle(point, currentRadius);
-      circle.strokeWidth = 2;
-      circle.strokeColor = new paper.Color("black");
-      this.Circles.push();
+      circle.strokeWidth = 1;
+      circle.strokeColor = strokeColor;
 
-      currentRadius -= maxRadius / 3;
+      this._circles.push(circle);
+
+      currentRadius -= maxRadius / 4;
     }
 
-    const layer: paper.Layer = new Layer(this.Circles);
-    this._project.addLayer(layer);
+    this._project.view.viewSize = new paper.Size(this.Width, this.Height);
   }
 
   protected StartAni(): void {
-    if (this.Circles.length === 0) this.CreateElements();
-
-    this._project.view.onFrame = (event: paper.Event) => {
-      this.onFrame(event);
-    };
+    if (this._circles.length === 0) this.CreateElements();
+    this.DoAnimation(0);
   }
 
-  private onFrame(event: paper.Event): void {
-    
-  }
+  private DoAnimation(index: number): void {
+    let direction: 'up' | 'down' = 'up';
 
+    const interval: number = window.setInterval(() => {
+
+      console.log(`Animating: ${index} | ${direction} | ${this._circles[index].strokeWidth}`);
+
+      if (direction === 'up') {
+        this._circles[index].strokeWidth += 0.5;
+        if (this._circles[index].strokeWidth === 4) {
+          direction = 'down';
+        }
+      } else {
+        this._circles[index].strokeWidth -= 0.5;
+        if (this._circles[index].strokeWidth === 1) {
+          clearInterval(interval);
+          this.DoAnimation(index === 3 ? 0 : ++index);
+        }
+      }
+    }, 16);
+  }
 }
